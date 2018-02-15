@@ -20,5 +20,6 @@ galaxy_info:
     - system
     - yum
     - dnf
+    - rpmfusion
 
 dependencies: []

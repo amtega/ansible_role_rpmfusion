@@ -7,6 +7,7 @@
     - role: amtega.docker_presets
     - role: amtega.docker_sandbox
       docker_sandbox_state: started
+      docker_sandbox_idempotence_test: false
 
 - name: test rpmfusion repository install
   hosts: docker_sandbox_containers
@@ -42,7 +43,7 @@
 
   tasks:
     - name: check that all enabled options are active for rpmfusion repositories
-      command: >-
+      shell: >-
         grep 'enabled=0' /etc/yum.repos.d/rpmfusion*.repo
       register: check_enabled_options
       failed_when: >-
