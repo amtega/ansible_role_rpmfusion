@@ -1,12 +1,26 @@
 ---
 # Install tasks
 
-- name: setup rpmfusion repository packages
-  yum:
-    name: "{{ item }}"
+- name: install rpmfusion repository packages
+  package:
+    name: >-
+      {{ rpmfusion_url
+         + "/"
+         + item
+         + "/"
+         + distro
+         + "/rpmfusion-"
+         + item
+         + "-release-"
+         + ansible_distribution_major_version
+         + ".noarch.rpm" }}
     state: "{{ rpmfusion_state }}"
-    validate_certs: "{{ rpmfusion_validate_certs }}"
-  with_items: "{{ rpmfusion_urls }}"
+  with_items:
+    - "free"
+    - "nonfree"
+  vars:
+    distro: >-
+      {{ (ansible_distribution | lower != "fedora") | ternary("el", "fedora") }}
   tags:
     - role::rpmfusion
     - role::rpmfusion::packages

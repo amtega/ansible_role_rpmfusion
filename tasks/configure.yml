@@ -3,14 +3,18 @@
 
 - name: configure rpmfusion repositories
   ini_file:
-    path: "/etc/yum.repos.d/rpmfusion-{{ item[0] + '.repo' }}"
-    section: "{{ item[0] + item[1] }}"
+    path: "/etc/yum.repos.d/rpmfusion-{{ item.0 + '.repo' }}"
+    section: "{{ 'rpmfusion-' + item.0 + item.1 }}"
     option: "enabled"
     value: >-
-      {{ inventory['rpmfusion_' + item[0]] + '_enabled'
-         | default(vars['rpmfusion_' + item[0]] + '_enabled']) }}
+      {{ inventory['rpmfusion_'
+                   + item.0 | regex_replace("-", "_")
+                   + '_enabled']
+         | default(vars['rpmfusion_'
+                        + item.0 | regex_replace("-", "_")
+                        + '_enabled']) }}
     no_extra_spaces: true
-  with_items:
+  with_nested:
     - [ free,
         free-updates,
         free-updates-testing,
@@ -20,7 +24,7 @@
     - [ '', '-debuginfo', '-source']
   when: rpmfusion_state=="present"
   loop_control:
-    label: "{{ item[0] + item[1] }}"
+    label: "{{ item.0 + item.1 }}"
   vars:
     inventory: hostvars[inventory_hostname]
   tags:
