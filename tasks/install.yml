@@ -1,0 +1,13 @@
+---
+# Install tasks
+
+- name: setup rpmfusion repository packages
+  yum:
+    name: "{{ item }}"
+    state: "{{ rpmfusion_state }}"
+    validate_certs: "{{ rpmfusion_validate_certs }}"
+  with_items: "{{ rpmfusion_urls }}"
+  tags:
+    - role::rpmfusion
+    - role::rpmfusion::packages
+    - role::rpmfusion::install

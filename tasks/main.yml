@@ -1,2 +1,14 @@
 ---
 # Role tasks
+
+- name: install rpmfusion repository
+  include_tasks: install.yml
+  tags:
+    - role::rpmfusion
+    - role::rpmfusion::install
+
+- name: configure rpmfusion repository
+  include_tasks: configure.yml
+  tags:
+    - role::rpmfusion
+    - role::rpmfusion::configure

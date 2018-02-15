@@ -1,0 +1,28 @@
+---
+# Configuration tasks
+
+- name: configure rpmfusion repositories
+  ini_file:
+    path: "/etc/yum.repos.d/rpmfusion-{{ item[0] + '.repo' }}"
+    section: "{{ item[0] + item[1] }}"
+    option: "enabled"
+    value: >-
+      {{ inventory['rpmfusion_' + item[0]] + '_enabled'
+         | default(vars['rpmfusion_' + item[0]] + '_enabled']) }}
+    no_extra_spaces: true
+  with_items:
+    - [ free,
+        free-updates,
+        free-updates-testing,
+        free,
+        nonfree-updates,
+        nonfree-updates-testing ]
+    - [ '', '-debuginfo', '-source']
+  when: rpmfusion_state=="present"
+  loop_control:
+    label: "{{ item[0] + item[1] }}"
+  vars:
+    inventory: hostvars[inventory_hostname]
+  tags:
+    - role::rpmfusion
+    - role::rpmfusion::configure

@@ -1,2 +1,67 @@
 ---
 # Tasks for tesing role
+
+- name: run idempotence test
+  hosts: localhost
+  roles:
+    - role: amtega.docker_presets
+    - role: amtega.docker_sandbox
+      docker_sandbox_state: started
+
+- name: test rpmfusion repository install
+  hosts: docker_sandbox_containers
+  roles:
+    - amtega.rpmfusion
+
+  vars:
+    rpmfusion_state: present
+
+    rpmfusion_free_enabled: 1
+    rpmfusion_free_debuginfo_enabled: 1
+    rpmfusion_free_source_enabled: 1
+
+    rpmfusion_free_updates_enabled: 1
+    rpmfusion_free_updates_debuginfo_enabled: 1
+    rpmfusion_free_updates_source_enabled: 1
+
+    rpmfusion_free_updates_testing_enabled: 1
+    rpmfusion_free_updates_testing_debuginfo_enabled: 1
+    rpmfusion_free_updates_testing_source_enabled: 1
+
+    rpmfusion_nonfree_enabled: 1
+    rpmfusion_nonfree_debuginfo_enabled: 1
+    rpmfusion_nonfree_source_enabled: 1
+
+    rpmfusion_nonfree_updates_enabled: 1
+    rpmfusion_nonfree_updates_debuginfo_enabled: 1
+    rpmfusion_nonfree_updates_source_enabled: 1
+
+    rpmfusion_nonfree_updates_testing_enabled: 1
+    rpmfusion_nonfree_updates_testing_debuginfo_enabled: 1
+    rpmfusion_nonfree_updates_testing_source_enabled: 1
+
+  tasks:
+    - name: check that all enabled options are active for rpmfusion repositories
+      command: >-
+        grep 'enabled=0' /etc/yum.repos.d/rpmfusion*.repo
+      register: check_enabled_options
+      failed_when: >-
+        check_enabled_options.rc != 1
+        or check_enabled_options.stdout | length > 0
+      changed_when: false
+
+  tags:
+    - idempotence
+
+- name: test rpmfusion repository removal
+  hosts: docker_sandbox_containers
+  roles:
+    - amtega.rpmfusion
+  vars:
+    rpmfusion_state: absent
+
+- name: cleanup docker docker sandbox
+  hosts: localhost
+  roles:
+    - role: amtega.docker_sandbox
+      docker_sandbox_state: absent
