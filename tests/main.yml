@@ -29,6 +29,10 @@
     rpmfusion_free_updates_testing_debuginfo_enabled: 1
     rpmfusion_free_updates_testing_source_enabled: 1
 
+    rpmfusion_free_rawhide_testing_enabled: 1
+    rpmfusion_free_rawhide_testing_debuginfo_enabled: 1
+    rpmfusion_free_rawhide_testing_source_enabled: 1
+
     rpmfusion_nonfree_enabled: 1
     rpmfusion_nonfree_debuginfo_enabled: 1
     rpmfusion_nonfree_source_enabled: 1
