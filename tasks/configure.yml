@@ -18,13 +18,13 @@
     - [ free,
         free-updates,
         free-updates-testing,
-        free,
+        nonfree,
         nonfree-updates,
         nonfree-updates-testing ]
     - [ '', '-debuginfo', '-source']
   when: rpmfusion_state=="present"
   loop_control:
-    label: "{{ item.0 + item.1 }}"
+    label: "{{ 'rpmfusion-' + item.0 + item.1 }}"
   vars:
     inventory: hostvars[inventory_hostname]
   tags:
