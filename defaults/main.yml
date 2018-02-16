@@ -1,2 +1,44 @@
 ---
 # Role default lower priority variables
+
+# Repository state (present /absent)
+
+rpmfusion_state: present
+
+# Validate rpmfusion repository certs
+
+rpmfusion_validate_certs: false
+
+# Enable or disable rpmfusion repositories
+
+rpmfusion_free_enabled: 1
+rpmfusion_free_debuginfo_enabled: 0
+rpmfusion_free_source_enabled: 0
+
+rpmfusion_free_updates_enabled: 1
+rpmfusion_free_updates_debuginfo_enabled: 0
+rpmfusion_free_updates_source_enabled: 0
+
+rpmfusion_free_updates_testing_enabled: 0
+rpmfusion_free_updates_testing_debuginfo_enabled: 0
+rpmfusion_free_updates_testing_source_enabled: 0
+
+rpmfusion_free_rawhide_enabled: 0
+rpmfusion_free_rawhide_debuginfo_enabled: 0
+rpmfusion_free_rawhide_source_enabled: 0
+
+rpmfusion_nonfree_enabled: 1
+rpmfusion_nonfree_debuginfo_enabled: 0
+rpmfusion_nonfree_source_enabled: 0
+
+rpmfusion_nonfree_updates_enabled: 1
+rpmfusion_nonfree_updates_debuginfo_enabled: 0
+rpmfusion_nonfree_updates_source_enabled: 0
+
+rpmfusion_nonfree_updates_testing_enabled: 1
+rpmfusion_nonfree_updates_testing_debuginfo_enabled: 0
+rpmfusion_nonfree_updates_testing_source_enabled: 0
+
+rpmfusion_nonfree_rawhide_enabled: 0
+rpmfusion_nonfree_rawhide_debuginfo_enabled: 0
+rpmfusion_nonfree_rawhide_source_enabled: 0

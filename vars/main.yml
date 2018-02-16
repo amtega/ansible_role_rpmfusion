@@ -1,2 +1,4 @@
 ---
 # Role variables
+
+rpmfusion_url: https://download1.rpmfusion.org

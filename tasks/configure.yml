@@ -1,0 +1,53 @@
+---
+# Configuration tasks
+
+- block:
+    - name: search rpmfusion repositories config files
+      stat:
+        path: "/etc/yum.repos.d/rpmfusion-{{ item + '.repo' }}"
+      register: check_repos_config_files_result
+      with_items: "{{ repos[0] }}"
+      loop_control:
+        label: "{{ 'rpmfusion-' + item }}"
+
+    - name: configure rpmfusion repositories
+      ini_file:
+        path: "/etc/yum.repos.d/rpmfusion-{{ item.0 + '.repo' }}"
+        section: "{{ 'rpmfusion-' + item.0 + item.1 }}"
+        option: "enabled"
+        value: >-
+          {{ inventory['rpmfusion_'
+                       + item.0 | regex_replace("-", "_")
+                       + '_enabled']
+             | default(vars['rpmfusion_'
+                            + item.0 | regex_replace("-", "_")
+                            + '_enabled']) }}
+        no_extra_spaces: yes
+        create: no
+      when: >-
+        "/etc/yum.repos.d/rpmfusion-"+ item.0 + ".repo"
+        in check_repos_config_files_result.results
+           | map(attribute="stat")
+           | selectattr("exists")
+           | map(attribute="path")
+           | list
+      with_nested: "{{ repos }}"
+      loop_control:
+        label: "{{ 'rpmfusion-' + item.0 + item.1 }}"
+
+  when: rpmfusion_state == "present"
+  vars:
+    inventory: hostvars[inventory_hostname]
+    repos:
+      - [ free,
+          free-updates,
+          free-updates-testing,
+          free-rawhide,
+          nonfree,
+          nonfree-updates,
+          nonfree-updates-testing,
+          nonfree-rawhide, ]
+      - [ '', '-debuginfo', '-source']
+  tags:
+    - role::rpmfusion
+    - role::rpmfusion::configure
