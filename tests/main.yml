@@ -7,13 +7,11 @@
     - role: amtega.docker_presets
     - role: amtega.docker_sandbox
       docker_sandbox_state: started
-      docker_sandbox_idempotence_test: false
 
-- name: test rpmfusion repository install
+- name: test rpmfusion repository install and enable
   hosts: docker_sandbox_containers
   roles:
     - amtega.rpmfusion
-
   vars:
     rpmfusion_state: present
 
@@ -29,9 +27,9 @@
     rpmfusion_free_updates_testing_debuginfo_enabled: 1
     rpmfusion_free_updates_testing_source_enabled: 1
 
-    rpmfusion_free_rawhide_testing_enabled: 1
-    rpmfusion_free_rawhide_testing_debuginfo_enabled: 1
-    rpmfusion_free_rawhide_testing_source_enabled: 1
+    rpmfusion_free_rawhide_enabled: 1
+    rpmfusion_free_rawhide_debuginfo_enabled: 1
+    rpmfusion_free_rawhide_source_enabled: 1
 
     rpmfusion_nonfree_enabled: 1
     rpmfusion_nonfree_debuginfo_enabled: 1
@@ -45,8 +43,12 @@
     rpmfusion_nonfree_updates_testing_debuginfo_enabled: 1
     rpmfusion_nonfree_updates_testing_source_enabled: 1
 
+    rpmfusion_nonfree_rawhide_enabled: 1
+    rpmfusion_nonfree_rawhide_debuginfo_enabled: 1
+    rpmfusion_nonfree_rawhide_source_enabled: 1
+
   tasks:
-    - name: check that all enabled options are active for rpmfusion repositories
+    - name: check that all rpmfusion repositories are enabled
       shell: >-
         grep 'enabled=0' /etc/yum.repos.d/rpmfusion*.repo
       register: check_enabled_options
@@ -54,9 +56,57 @@
         check_enabled_options.rc != 1
         or check_enabled_options.stdout | length > 0
       changed_when: false
-
   tags:
     - idempotence
+
+- name: test rpmfusion repository install and disable
+  hosts: docker_sandbox_containers
+  roles:
+    - amtega.rpmfusion
+  vars:
+    rpmfusion_state: present
+
+    rpmfusion_free_enabled: 0
+    rpmfusion_free_debuginfo_enabled: 0
+    rpmfusion_free_source_enabled: 0
+
+    rpmfusion_free_updates_enabled: 0
+    rpmfusion_free_updates_debuginfo_enabled: 0
+    rpmfusion_free_updates_source_enabled: 0
+
+    rpmfusion_free_updates_testing_enabled: 0
+    rpmfusion_free_updates_testing_debuginfo_enabled: 0
+    rpmfusion_free_updates_testing_source_enabled: 0
+
+    rpmfusion_free_rawhide_enabled: 0
+    rpmfusion_free_rawhide_debuginfo_enabled: 0
+    rpmfusion_free_rawhide_source_enabled: 0
+
+    rpmfusion_nonfree_enabled: 0
+    rpmfusion_nonfree_debuginfo_enabled: 0
+    rpmfusion_nonfree_source_enabled: 0
+
+    rpmfusion_nonfree_updates_enabled: 0
+    rpmfusion_nonfree_updates_debuginfo_enabled: 0
+    rpmfusion_nonfree_updates_source_enabled: 0
+
+    rpmfusion_nonfree_updates_testing_enabled: 0
+    rpmfusion_nonfree_updates_testing_debuginfo_enabled: 0
+    rpmfusion_nonfree_updates_testing_source_enabled: 0
+
+    rpmfusion_nonfree_rawhide_enabled: 0
+    rpmfusion_nonfree_rawhide_debuginfo_enabled: 0
+    rpmfusion_nonfree_rawhide_source_enabled: 0
+
+  tasks:
+    - name: check that all rpmfusion repositories are disabled
+      shell: >-
+        grep 'enabled=1' /etc/yum.repos.d/rpmfusion*.repo
+      register: check_enabled_options
+      failed_when: >-
+        check_enabled_options.rc != 1
+        or check_enabled_options.stdout | length > 0
+      changed_when: false
 
 - name: test rpmfusion repository removal
   hosts: docker_sandbox_containers
@@ -64,9 +114,18 @@
     - amtega.rpmfusion
   vars:
     rpmfusion_state: absent
+  tasks:
+    - name: check that all rpmfusion packages were removed
+      shell: >-
+        yum list installed rpmfusion* | grep rpmfusion
+      args:
+        warn: false
+      register: check_packages
+      failed_when: check_packages.stdout | length > 0
+      changed_when: false
 
-- name: cleanup docker docker sandbox
-  hosts: localhost
-  roles:
-    - role: amtega.docker_sandbox
-      docker_sandbox_state: absent
+# - name: cleanup docker docker sandbox
+#   hosts: localhost
+#   roles:
+#     - role: amtega.docker_sandbox
+#       docker_sandbox_state: absent

@@ -12,7 +12,7 @@ A list of all the default variables for this role is available in `defaults/main
 
 ## Dependencies
 
-None.
+- amtega.epel (when host has a centos/rhel 6 operating system)
 
 ## Example Playbook
 

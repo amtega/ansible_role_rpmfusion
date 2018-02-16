@@ -23,9 +23,9 @@ rpmfusion_free_updates_testing_enabled: 0
 rpmfusion_free_updates_testing_debuginfo_enabled: 0
 rpmfusion_free_updates_testing_source_enabled: 0
 
-rpmfusion_free_rawhide_testing_enabled: 0
-rpmfusion_free_rawhide_testing_debuginfo_enabled: 0
-rpmfusion_free_rawhide_testing_source_enabled: 0
+rpmfusion_free_rawhide_enabled: 0
+rpmfusion_free_rawhide_debuginfo_enabled: 0
+rpmfusion_free_rawhide_source_enabled: 0
 
 rpmfusion_nonfree_enabled: 1
 rpmfusion_nonfree_debuginfo_enabled: 0
@@ -38,3 +38,7 @@ rpmfusion_nonfree_updates_source_enabled: 0
 rpmfusion_nonfree_updates_testing_enabled: 1
 rpmfusion_nonfree_updates_testing_debuginfo_enabled: 0
 rpmfusion_nonfree_updates_testing_source_enabled: 0
+
+rpmfusion_nonfree_rawhide_enabled: 0
+rpmfusion_nonfree_rawhide_debuginfo_enabled: 0
+rpmfusion_nonfree_rawhide_source_enabled: 0
