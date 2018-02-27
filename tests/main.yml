@@ -1,5 +1,5 @@
 ---
-# Tasks for tesing role
+# Tasks for testing role
 
 - name: run idempotence test
   hosts: localhost
@@ -48,7 +48,7 @@
     rpmfusion_nonfree_rawhide_source_enabled: 1
 
   tasks:
-    - name: check that all rpmfusion repositories are enabled
+    - name: check that all rpmfusion reAdded support for fedora 27 and improved coding conventions.positories are enabled
       shell: >-
         grep 'enabled=0' /etc/yum.repos.d/rpmfusion*.repo
       register: check_enabled_options
@@ -124,8 +124,8 @@
       failed_when: check_packages.stdout | length > 0
       changed_when: false
 
-# - name: cleanup docker docker sandbox
-#   hosts: localhost
-#   roles:
-#     - role: amtega.docker_sandbox
-#       docker_sandbox_state: absent
+- name: cleanup docker docker sandbox
+  hosts: localhost
+  roles:
+    - role: amtega.docker_sandbox
+      docker_sandbox_state: absent
