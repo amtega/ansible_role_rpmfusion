@@ -2,46 +2,95 @@
 # Install tasks
 
 - block:
-    - name: setup python required packages
+    - name: setup dependency packages
       package:
         name: "{{ item }}"
         state: present
+      loop: >-
+        {{ rpmfusion_dependency_packages[rpmfusion_distro_packages_key] }}
       when:
         - rpmfusion_state == "present"
-        - ansible_distribution | lower in ["centos", "rhel"]
-        - ansible_distribution_major_version == "6"
-      with_items:
-        - python-urllib3
-        - pyOpenSSL
-        - python-ndg_httpsclient
-        - python-pyasn1
-
-    - name: setup rpmfusion repository packages
-      yum:
-        name: >-
-          {{ (rpmfusion_state == "present")
-             | ternary(rpmfusion_url
-                       + "/"
-                       + item
-                       + "/"
-                       + distro
-                       + "/rpmfusion-"
-                       + item
-                       + "-release-"
-                       + ansible_distribution_major_version
-                       + ".noarch.rpm",
-                       "rpmfusion-"
-                       + item
-                       + "-release-"
-                       + ansible_distribution_major_version) }}
-        state: "{{ rpmfusion_state }}"
-      with_items:
-        - free
-        - nonfree
       vars:
-        distro: >-
-          {{ (ansible_distribution | lower != "fedora")
-             | ternary("el", "fedora") }}
+        rpmfusion_distro_packages_key: >-
+          {{ ansible_facts.distribution
+             | lower
+             + "_" + ansible_facts.distribution_major_version }}
+
+    - name: search rpmfusion installed packages
+      shell: >-
+        rpm -q --queryformat "%{NAME}\n"
+        {{ rpmfusion_package | regex_replace('.noarch.rpm', '') }}
+      args:
+        warn: false
+      register: rpmfusion_check_packages_result
+      changed_when: false
+      failed_when: false
+      loop: "{{ rpmfusion_variants }}"
+
+    - block:
+        - name: download rpmfusion repository packages
+          get_url:
+            url: >-
+              {{ rpmfusion_url
+                 + "/"
+                 + item
+                 + "/"
+                 + rpmfusion_distro
+                 + "/"
+                 + rpmfusion_package }}
+            dest: "{{ rpmfusion_download_tmp_dir }}"
+          when:
+            - rpmfusion_state == "present"
+            - >
+              rpmfusion_package | splitext | first
+              not in rpmfusion_installed_packages
+          loop: "{{ rpmfusion_variants }}"
+
+        - name: install rpmfusion repository packages
+          package:
+            name: "{{ rpmfusion_package_download_path }}"
+            state: present
+          when:
+            - rpmfusion_state == "present"
+            - >
+              rpmfusion_package | regex_replace(".noarch.rpm", "")
+              not in rpmfusion_installed_packages
+          loop: "{{ rpmfusion_variants }}"
+
+        - name: uninstall rpmfusion repository packages
+          package:
+            name: "{{ item | regex_replace('-27-1.noarch', '') }}"
+            state: absent
+          when: rpmfusion_state == "absent"
+          loop: "{{ rpmfusion_installed_packages }}"
+
+        - name: delete rpmfusion repository downloaded packages
+          file:
+            path: "{{ rpmfusion_package_download_path }}"
+            state: absent
+          loop: "{{ rpmfusion_variants }}"
+      vars:
+        rpmfusion_installed_packages: >-
+          {{ rpmfusion_check_packages_result.results
+             | selectattr('rc', 'equalto', 0)
+             | map(attribute='stdout_lines')
+             | list
+             | sum(start=[]) }}
+  vars:
+    rpmfusion_distro: >-
+      {{ (ansible_facts.distribution | lower != "fedora")
+         | ternary("el", "fedora") }}
+    rpmfusion_package: >-
+      {{ "rpmfusion-"
+         + item
+         + "-release-"
+         + ansible_facts.distribution_major_version
+         + ".noarch.rpm" }}
+    rpmfusion_package_download_path: >-
+      {{ rpmfusion_download_tmp_dir
+         + "/"
+         + rpmfusion_package }}
+
   tags:
     - role::rpmfusion
     - role::rpmfusion::packages
