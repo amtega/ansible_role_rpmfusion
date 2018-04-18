@@ -6,11 +6,10 @@ galaxy_info:
   description: Setup rpmfusion repository
   company: AMTEGA - Xunta de Galicia
   license: GPLv3 or EUPL
-  min_ansible_version: 2.4
+  min_ansible_version: 2.5
   platforms:
   - name: Fedora
     versions:
-      - 25
       - 26
       - 27
   - name: EL
@@ -26,5 +25,5 @@ galaxy_info:
 dependencies:
   - role: amtega.epel
     when:
-      - ansible_distribution | lower in ["centos", "rhel"]
-      - ansible_distribution_major_version == "6"
+      - ansible_facts.distribution | lower in ["centos", "rhel"]
+      - ansible_facts.distribution_major_version == "6"
