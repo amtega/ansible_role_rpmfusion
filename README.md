@@ -4,7 +4,7 @@ This is an [Ansible](http://www.ansible.com) role which manages RPMFUSION reposi
 
 ## Requirements
 
-- Ansible >= 2.4
+[Ansible 2.5+](http://docs.ansible.com/ansible/latest/intro_installation.html)
 
 ## Role Variables
 
@@ -57,18 +57,13 @@ This is an example playbook:
 
 ## Testing
 
-Test are based on docker containers. You can run the tests with the following commands:
+Tests are based on vagrant virtual machines. You can setup vagrant engine quickly using the playbook `files/setup.yml` available in the role [amtega.vagrant_engine](https://galaxy.ansible.com/amtega/vagrant_engine).
+
+Once you have vagrant, you can run the tests with the following commands:
 
 ```shell
 $ cd amtega.rpmfusion/tests
 $ ansible-playbook main.yml
-```
-
-If you have docker engine configured you can avoid running dependant 'docker_engine' role (that usually requries root privileges) with the following commands:
-
-```shell
-$ cd amtega.rpmfusion/tests
-$ ansible-playbook --skip-tags "role::docker_engine" main.yml
 ```
 
 ## License
