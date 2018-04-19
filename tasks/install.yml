@@ -9,7 +9,7 @@
       loop: >-
         {{ rpmfusion_dependency_packages[rpmfusion_distro_packages_key] }}
       when:
-        - rpmfusion_state == "present"
+        - rpmfusion_state in ["present", "force"]
       vars:
         rpmfusion_distro_packages_key: >-
           {{ ansible_facts.distribution
@@ -28,34 +28,29 @@
       loop: "{{ rpmfusion_variants }}"
 
     - block:
-        - name: download rpmfusion repository packages
-          get_url:
-            url: >-
-              {{ rpmfusion_url
-                 + "/"
-                 + item
-                 + "/"
-                 + rpmfusion_distro
-                 + "/"
-                 + rpmfusion_package }}
-            dest: "{{ rpmfusion_download_tmp_dir }}"
-          when:
-            - rpmfusion_state == "present"
-            - >
-              rpmfusion_package | splitext | first
-              not in rpmfusion_installed_packages
-          loop: "{{ rpmfusion_variants }}"
+        - block:
+            - name: download rpmfusion repository packages
+              get_url:
+                url: >-
+                  {{ rpmfusion_url
+                     + "/"
+                     + item
+                     + "/"
+                     + rpmfusion_distro
+                     + "/"
+                     + rpmfusion_package }}
+                dest: "{{ rpmfusion_download_tmp_dir }}"
+              loop: "{{ rpmfusion_variants }}"
 
-        - name: install rpmfusion repository packages
-          package:
-            name: "{{ rpmfusion_package_download_path }}"
-            state: present
+            - name: install rpmfusion repository packages
+              package:
+                name: "{{ rpmfusion_package_download_path }}"
+                state: present
+              loop: "{{ rpmfusion_variants }}"
           when:
-            - rpmfusion_state == "present"
-            - >
-              rpmfusion_package | regex_replace(".noarch.rpm", "")
-              not in rpmfusion_installed_packages
-          loop: "{{ rpmfusion_variants }}"
+            (rpmfusion_state == "present"
+              and rpmfusion_package_name not in rpmfusion_installed_packages)
+            or rpmfusion_state == "force"
 
         - name: uninstall rpmfusion repository packages
           package:
@@ -80,10 +75,13 @@
     rpmfusion_distro: >-
       {{ (ansible_facts.distribution | lower != "fedora")
          | ternary("el", "fedora") }}
-    rpmfusion_package: >-
+    rpmfusion_package_name: >-
       {{ "rpmfusion-"
          + item
-         + "-release-"
+         + "-release" }}
+    rpmfusion_package: >-
+      {{ rpmfusion_package_name
+         + "-"
          + ansible_facts.distribution_major_version
          + ".noarch.rpm" }}
     rpmfusion_package_download_path: >-

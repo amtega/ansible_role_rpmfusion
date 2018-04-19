@@ -35,7 +35,7 @@
       loop_control:
         label: "{{ 'rpmfusion-' + item.0 + item.1 }}"
 
-  when: rpmfusion_state == "present"
+  when: rpmfusion_state in ["present", "force"]
   vars:
     inventory: hostvars[inventory_hostname]
     rpmfusion_repos:
