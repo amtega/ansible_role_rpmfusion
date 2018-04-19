@@ -51,8 +51,6 @@
 
     rpmfusion_nonfree_rawhide_enabled: 1
     rpmfusion_nonfree_rawhide_debuginfo_enabled: 1
-    rpmfusion_nonfree_rawhide_source_enabled: 1
-
   tasks:
     - name: check that all rpmfusion repositories are enabled
       shell: >-
@@ -104,11 +102,58 @@
     rpmfusion_nonfree_rawhide_enabled: 0
     rpmfusion_nonfree_rawhide_debuginfo_enabled: 0
     rpmfusion_nonfree_rawhide_source_enabled: 0
-
   tasks:
     - name: check that all rpmfusion repositories are disabled
       shell: >-
         grep 'enabled=1' /etc/yum.repos.d/rpmfusion*.repo
+      register: check_enabled_options
+      failed_when: >-
+        check_enabled_options.rc != 1
+        or check_enabled_options.stdout | length > 0
+      changed_when: false
+
+- name: test rpmfusion repository force install
+  hosts: docker_sandbox_containers
+  serial: 1
+  roles:
+    - amtega.rpmfusion
+  vars:
+    rpmfusion_state: force
+
+    rpmfusion_free_enabled: 1
+    rpmfusion_free_debuginfo_enabled: 1
+    rpmfusion_free_source_enabled: 1
+
+    rpmfusion_free_updates_enabled: 1
+    rpmfusion_free_updates_debuginfo_enabled: 1
+    rpmfusion_free_updates_source_enabled: 1
+
+    rpmfusion_free_updates_testing_enabled: 1
+    rpmfusion_free_updates_testing_debuginfo_enabled: 1
+    rpmfusion_free_updates_testing_source_enabled: 1
+
+    rpmfusion_free_rawhide_enabled: 1
+    rpmfusion_free_rawhide_debuginfo_enabled: 1
+    rpmfusion_free_rawhide_source_enabled: 1
+
+    rpmfusion_nonfree_enabled: 1
+    rpmfusion_nonfree_debuginfo_enabled: 1
+    rpmfusion_nonfree_source_enabled: 1
+
+    rpmfusion_nonfree_updates_enabled: 1
+    rpmfusion_nonfree_updates_debuginfo_enabled: 1
+    rpmfusion_nonfree_updates_source_enabled: 1
+
+    rpmfusion_nonfree_updates_testing_enabled: 1
+    rpmfusion_nonfree_updates_testing_debuginfo_enabled: 1
+    rpmfusion_nonfree_updates_testing_source_enabled: 1
+
+    rpmfusion_nonfree_rawhide_enabled: 1
+    rpmfusion_nonfree_rawhide_debuginfo_enabled: 1
+  tasks:
+    - name: check that all rpmfusion repositories are enabled
+      shell: >-
+        grep 'enabled=0' /etc/yum.repos.d/rpmfusion*.repo
       register: check_enabled_options
       failed_when: >-
         check_enabled_options.rc != 1
