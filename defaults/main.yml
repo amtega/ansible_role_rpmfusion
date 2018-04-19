@@ -1,7 +1,8 @@
 ---
 # Role default lower priority variables
 
-# Repository state (present /absent)
+# Repository state. Can be present, absent or force (to force insall if it's
+# already present)
 
 rpmfusion_state: present
 

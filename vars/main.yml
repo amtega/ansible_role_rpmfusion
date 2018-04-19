@@ -2,3 +2,36 @@
 # Role variables
 
 rpmfusion_url: https://download1.rpmfusion.org
+
+rpmfusion_variants:
+  - free
+  - nonfree
+
+rpmfusion_dependency_packages:
+  centos_6:
+    - yum
+    - python-urllib3
+    - pyOpenSSL
+    - python-ndg_httpsclient
+    - python-pyasn1
+
+  centos_7:
+    - yum
+
+  fedora_26:
+    - yum
+
+  fedora_27:
+    - yum
+
+  rhel_6:
+    - yum
+    - python-urllib3
+    - pyOpenSSL
+    - python-ndg_httpsclient
+    - python-pyasn1
+
+  rhel_7:
+    - yum
+
+rpmfusion_download_tmp_dir: /tmp

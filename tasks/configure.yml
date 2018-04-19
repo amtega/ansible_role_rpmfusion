@@ -6,7 +6,7 @@
       stat:
         path: "/etc/yum.repos.d/rpmfusion-{{ item + '.repo' }}"
       register: check_repos_config_files_result
-      with_items: "{{ repos[0] }}"
+      loop: "{{ rpmfusion_repos }}"
       loop_control:
         label: "{{ 'rpmfusion-' + item }}"
 
@@ -31,23 +31,26 @@
            | selectattr("exists")
            | map(attribute="path")
            | list
-      with_nested: "{{ repos }}"
+      loop: "{{ query('nested', rpmfusion_repos, rpmfusion_repos_variants) }}"
       loop_control:
         label: "{{ 'rpmfusion-' + item.0 + item.1 }}"
 
-  when: rpmfusion_state == "present"
+  when: rpmfusion_state in ["present", "force"]
   vars:
     inventory: hostvars[inventory_hostname]
-    repos:
-      - [ free,
-          free-updates,
-          free-updates-testing,
-          free-rawhide,
-          nonfree,
-          nonfree-updates,
-          nonfree-updates-testing,
-          nonfree-rawhide, ]
-      - [ '', '-debuginfo', '-source']
+    rpmfusion_repos:
+      - free
+      - free-updates
+      - free-updates-testing
+      - free-rawhide
+      - nonfree
+      - nonfree-updates
+      - nonfree-updates-testing
+      - nonfree-rawhide
+    rpmfusion_repos_variants:
+        - ""
+        - "-debuginfo"
+        - "-source"
   tags:
     - role::rpmfusion
     - role::rpmfusion::configure
