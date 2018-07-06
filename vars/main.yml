@@ -1,11 +1,31 @@
 ---
 # Role variables
 
+# Supported distributions
+
+rpmfusion_supported_distributions:
+  - centos
+  - fedora
+  - rhel
+
+# Supported distributions versions
+
+rpmfusion_supported_versions:
+  centos: 6
+  fedora: 27
+  rhel: 7
+
+# rpmfusion base url
+
 rpmfusion_url: https://download1.rpmfusion.org
+
+# rpmfusion variants
 
 rpmfusion_variants:
   - free
   - nonfree
+
+# rpmfusion dependency packages
 
 rpmfusion_dependency_packages:
   centos_6:
@@ -33,5 +53,7 @@ rpmfusion_dependency_packages:
 
   rhel_7:
     - yum
+
+# Download temporary directory
 
 rpmfusion_download_tmp_dir: /tmp
