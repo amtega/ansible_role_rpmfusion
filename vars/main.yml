@@ -13,7 +13,7 @@ rpmfusion_supported_distributions:
 rpmfusion_supported_versions:
   centos: 6
   fedora: 27
-  rhel: 7
+  rhel: 6
 
 # rpmfusion base url
 
