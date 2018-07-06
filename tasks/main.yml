@@ -1,6 +1,12 @@
 ---
 # Role tasks
 
+- name: sanity checks
+  import_tasks: check.yml
+  tags:
+    - role::rpmfusion
+    - role::rpmfusion::check
+
 - name: install rpmfusion repository
   include_tasks: install.yml
   tags:
