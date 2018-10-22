@@ -2,6 +2,7 @@
 # Role dependencies
 
 galaxy_info:
+  role_name: rpmfusion
   author: Juan Antonio Valiño García
   description: Setup rpmfusion repository
   company: AMTEGA - Xunta de Galicia
