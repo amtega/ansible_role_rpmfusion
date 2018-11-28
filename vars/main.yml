@@ -1,20 +1,6 @@
 ---
 # Role variables
 
-# Supported distributions
-
-rpmfusion_supported_distributions:
-  - centos
-  - fedora
-  - rhel
-
-# Supported distributions versions
-
-rpmfusion_supported_versions:
-  centos: 6
-  fedora: 27
-  rhel: 6
-
 # rpmfusion base url
 
 rpmfusion_url: https://download1.rpmfusion.org
