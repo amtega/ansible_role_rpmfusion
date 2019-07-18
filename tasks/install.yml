@@ -2,21 +2,7 @@
 # Install tasks
 
 - block:
-    - name: setup dependency packages
-      package:
-        name: "{{ item }}"
-        state: present
-      loop: >-
-        {{ rpmfusion_dependency_packages[rpmfusion_distro_packages_key] }}
-      when:
-        - rpmfusion_state in ["present", "force"]
-      vars:
-        rpmfusion_distro_packages_key: >-
-          {{ ansible_facts.distribution
-             | lower
-             + "_" + ansible_facts.distribution_major_version }}
-
-    - name: search rpmfusion installed packages
+    - name: Search rpmfusion installed packages
       shell: >-
         rpm -q --queryformat "%{NAME}\n"
         {{ rpmfusion_package | regex_replace('.noarch.rpm', '') }}
@@ -29,7 +15,7 @@
 
     - block:
         - block:
-            - name: download rpmfusion repository packages
+            - name: Download rpmfusion repository packages
               get_url:
                 url: >-
                   {{ rpmfusion_url
@@ -42,7 +28,7 @@
                 dest: "{{ rpmfusion_download_tmp_dir }}"
               loop: "{{ rpmfusion_variants }}"
 
-            - name: install rpmfusion repository packages
+            - name: Install rpmfusion repository packages
               package:
                 name: "{{ rpmfusion_package_download_path }}"
                 state: present
@@ -52,14 +38,14 @@
               and rpmfusion_package_name not in rpmfusion_installed_packages)
             or rpmfusion_state == "force"
 
-        - name: uninstall rpmfusion repository packages
+        - name: Uninstall rpmfusion repository packages
           package:
             name: "{{ item | regex_replace('-27-1.noarch', '') }}"
             state: absent
           when: rpmfusion_state == "absent"
           loop: "{{ rpmfusion_installed_packages }}"
 
-        - name: delete rpmfusion repository downloaded packages
+        - name: Delete rpmfusion repository downloaded packages
           file:
             path: "{{ rpmfusion_package_download_path }}"
             state: absent
