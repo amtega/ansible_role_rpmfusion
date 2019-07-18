@@ -2,7 +2,7 @@
 # Configuration tasks
 
 - block:
-    - name: search rpmfusion repositories config files
+    - name: Search rpmfusion repositories config files
       stat:
         path: "/etc/yum.repos.d/rpmfusion-{{ item + '.repo' }}"
       register: check_repos_config_files_result
@@ -10,7 +10,7 @@
       loop_control:
         label: "{{ 'rpmfusion-' + item }}"
 
-    - name: configure rpmfusion repositories
+    - name: Configure rpmfusion repositories
       ini_file:
         path: "/etc/yum.repos.d/rpmfusion-{{ item.0 + '.repo' }}"
         section: "{{ 'rpmfusion-' + item.0 + item.1 }}"
