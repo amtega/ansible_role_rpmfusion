@@ -25,53 +25,17 @@ galaxy_info:
 
 dependencies:
   - role: amtega.check_platform
-    check_platform_distributions:
-      centos: 6
-      fedora: 29
-      rhel: 6
     tags:
-      - role::rpmfusion
+      - never
 
   - role: amtega.epel
-    when:
-      - ansible_facts.distribution | lower in ["centos", "rhel"]
-      - ansible_facts.distribution_major_version == "6"
     tags:
-      - role::rpmfusion
-      - role::rpmfusion::install
+      - never
 
   - role: amtega.packages
-    vars:
-      packages_os:
-        centos:
-          all:
-            yum: present
-          6:
-            python-urllib3: present
-            pyOpenSSL: present
-            python-ndg_httpsclient: present
-            python-pyasn1: present
-        fedora:
-          all:
-            yum: present
-        rhel:
-          all:
-            yum: present
-          6:
-            python-urllib3: present
-            pyOpenSSL: present
-            python-ndg_httpsclient: present
-            python-pyasn1: present
-      packages_python:
-        all:
-          all:
-            "python-gitlab>=1.6": latest
-            PyYaml: present
     tags:
-      - role::rpmfusion
-      - role::rpmfusion::install
+      - never
 
   - role: amtega.proxy_client
-    proxy_client_permanent: no
     tags:
-      - role::rpmfusion
+      - never

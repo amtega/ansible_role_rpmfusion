@@ -2,7 +2,6 @@
 
 This is an [Ansible](http://www.ansible.com) role which manages RPMFUSION repository.
 
-
 ## Role Variables
 
 A list of all the default variables for this role is available in `defaults/main.yml`.
