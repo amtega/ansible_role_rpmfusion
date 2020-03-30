@@ -7,7 +7,7 @@ galaxy_info:
   description: Setup rpmfusion repository
   company: AMTEGA - Xunta de Galicia
   license: GPLv3 or EUPL
-  min_ansible_version: 2.7
+  min_ansible_version: 2.9
   platforms:
   - name: EL
     versions:
@@ -25,17 +25,43 @@ galaxy_info:
 
 dependencies:
   - role: amtega.check_platform
-    tags:
-      - never
+    vars:
+      check_platform_distributions:
+        centos: 6
+        fedora: 29
+        rhel: 6
 
   - role: amtega.epel
-    tags:
-      - never
+    when: ansible_facts.distribution_major_version == "6"
 
   - role: amtega.packages
-    tags:
-      - never
+    vars:
+      packages_os:
+        centos:
+          all:
+            yum: present
+          6:
+            python-urllib3: present
+            pyOpenSSL: present
+            python-ndg_httpsclient: present
+            python-pyasn1: present
+        fedora:
+          all:
+            yum: present
+        rhel:
+          all:
+            yum: present
+          6:
+            python-urllib3: present
+            pyOpenSSL: present
+            python-ndg_httpsclient: present
+            python-pyasn1: present
+      packages_python:
+        all:
+          all:
+            "python-gitlab>=1.6": latest
+            PyYaml: present
 
   - role: amtega.proxy_client
-    tags:
-      - never
+    vars:
+      proxy_client_permanent: no
