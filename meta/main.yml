@@ -29,7 +29,7 @@ dependencies:
       check_platform_distributions:
         centos: 6
         fedora: 29
-        rhel: 6
+        redhat: 6
 
   - role: amtega.epel
     when: ansible_facts.distribution_major_version == "6"
@@ -48,7 +48,7 @@ dependencies:
         fedora:
           all:
             yum: present
-        rhel:
+        redhat:
           all:
             yum: present
           6:
