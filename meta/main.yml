@@ -11,12 +11,12 @@ galaxy_info:
   platforms:
   - name: EL
     versions:
-      - 6
       - 7
+      - 8
   - name: Fedora
     versions:
-      - 29
-      - 30
+      - 32
+      - 33
   galaxy_tags:
     - system
     - yum
@@ -27,12 +27,9 @@ dependencies:
   - role: amtega.check_platform
     vars:
       check_platform_distributions:
-        centos: 6
-        fedora: 29
-        redhat: 6
-
-  - role: amtega.epel
-    when: ansible_facts.distribution_major_version == "6"
+        centos: 7
+        fedora: 32
+        redhat: 7
 
   - role: amtega.packages
     vars:
@@ -56,11 +53,6 @@ dependencies:
             pyOpenSSL: present
             python-ndg_httpsclient: present
             python-pyasn1: present
-      packages_python:
-        all:
-          all:
-            "python-gitlab>=1.6": latest
-            PyYaml: present
 
   - role: amtega.proxy_client
     vars:

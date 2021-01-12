@@ -1,0 +1,6 @@
+---
+
+- name: Converge
+  hosts: molecule_hosts
+  roles:
+    - amtega.rpmfusion

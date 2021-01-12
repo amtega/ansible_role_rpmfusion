@@ -1,0 +1,13 @@
+---
+
+- name: Verify
+  hosts: molecule_hosts
+  tasks:
+    - name: Check that all rpmfusion repositories are disabled
+      shell: >-
+        grep 'enabled=1' /etc/yum.repos.d/rpmfusion*.repo
+      register: check_enabled_options
+      failed_when: >-
+        check_enabled_options.rc != 1
+        or check_enabled_options.stdout | length > 0
+      changed_when: false
