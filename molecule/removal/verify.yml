@@ -1,0 +1,13 @@
+---
+
+- name: Verify
+  hosts: molecule_hosts
+  tasks:
+    - name: Check that all rpmfusion packages were removed
+      shell: >-
+        rpm -qa | grep rpmfusion
+      args:
+        warn: false
+      register: check_packages
+      failed_when: check_packages.stdout | length > 0
+      changed_when: false
