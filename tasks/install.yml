@@ -32,6 +32,7 @@
               package:
                 name: "{{ rpmfusion_package_download_path }}"
                 state: present
+                disable_gpg_check: "{{ not rpmfusion_validate_certs | bool }}"
               loop: "{{ rpmfusion_variants }}"
           when:
             (rpmfusion_state == "present"
