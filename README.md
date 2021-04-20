@@ -20,7 +20,7 @@ This is an example playbook:
   vars:
     rpmfusion_state: present
 
-    rpmfusion_validate_certs: false
+    rpmfusion_validate_certs: no
 
     rpmfusion_free_enabled: 1
     rpmfusion_free_debuginfo_enabled: 1
