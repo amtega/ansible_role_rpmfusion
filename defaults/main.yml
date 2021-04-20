@@ -8,7 +8,7 @@ rpmfusion_state: present
 
 # Validate rpmfusion repository certs
 
-rpmfusion_validate_certs: false
+rpmfusion_validate_certs: no
 
 # Enable or disable rpmfusion repositories
 
