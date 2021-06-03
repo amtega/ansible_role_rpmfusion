@@ -48,9 +48,9 @@
       - nonfree-updates-testing
       - nonfree-rawhide
     rpmfusion_repos_variants:
-        - ""
-        - "-debuginfo"
-        - "-source"
+      - ""
+      - "-debuginfo"
+      - "-source"
   tags:
     - role::rpmfusion
     - role::rpmfusion::configure

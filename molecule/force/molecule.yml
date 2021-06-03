@@ -42,11 +42,9 @@ provisioner:
   name: ansible
   playbooks:
     cleanup: ../resources/cleanup.yml
-    cleanup: ../resources/converge.yml
     prepare: ../resources/prepare.yml
     converge: ../resources/converge.yml
     side_effect: ../resources/side_effect.yml
-    verify: ../resources/verify.yml
   inventory:
     hosts:
       molecule_hosts:
