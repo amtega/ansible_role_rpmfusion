@@ -3,11 +3,12 @@
 
 galaxy_info:
   role_name: rpmfusion
+  namespace: amtega
   author: Juan Antonio Valiño García
   description: Setup rpmfusion repository
   company: AMTEGA - Xunta de Galicia
   license: GPLv3 or EUPL
-  min_ansible_version: 2.9
+  min_ansible_version: 2.10
   platforms:
   - name: EL
     versions:
@@ -15,8 +16,8 @@ galaxy_info:
       - 8
   - name: Fedora
     versions:
-      - 32
       - 33
+      - 34
   galaxy_tags:
     - system
     - yum
@@ -28,7 +29,7 @@ dependencies:
     vars:
       check_platform_distributions:
         centos: 7
-        fedora: 32
+        fedora: 33
         redhat: 7
 
   - role: amtega.packages
