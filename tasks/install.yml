@@ -7,10 +7,10 @@
         rpm -q --queryformat "%{NAME}\n"
         {{ rpmfusion_package | regex_replace('.noarch.rpm', '') }}
       args:
-        warn: false
+        warn: no
       register: rpmfusion_check_packages_result
-      changed_when: false
-      failed_when: false
+      changed_when: no
+      failed_when: no
       loop: "{{ rpmfusion_variants }}"
 
     - block:
@@ -27,6 +27,7 @@
                      + rpmfusion_package }}
                 dest: "{{ rpmfusion_download_tmp_dir }}"
               loop: "{{ rpmfusion_variants }}"
+              environment: "{{ proxy_client_environment }}"
 
             - name: Install rpmfusion repository packages
               package:
