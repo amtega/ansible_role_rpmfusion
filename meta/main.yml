@@ -38,22 +38,12 @@ dependencies:
         centos:
           all:
             yum: present
-          6:
-            python-urllib3: present
-            pyOpenSSL: present
-            python-ndg_httpsclient: present
-            python-pyasn1: present
         fedora:
           all:
             yum: present
         redhat:
           all:
             yum: present
-          6:
-            python-urllib3: present
-            pyOpenSSL: present
-            python-ndg_httpsclient: present
-            python-pyasn1: present
 
   - role: amtega.proxy_client
     vars:
