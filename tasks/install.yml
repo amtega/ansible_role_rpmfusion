@@ -26,6 +26,7 @@
                      + "/"
                      + rpmfusion_package }}
                 dest: "{{ rpmfusion_download_tmp_dir }}"
+                validate_certs: "{{ rpmfusion_validate_certs | bool }}"
               loop: "{{ rpmfusion_variants }}"
               environment: "{{ proxy_client_environment }}"
 
