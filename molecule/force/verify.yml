@@ -4,7 +4,7 @@
   hosts: molecule_hosts
   tasks:
     - name: Check that all rpmfusion repositories are enabled
-      shell: >-
+      ansible.builtin.shell: >-
         grep 'enabled=0' /etc/yum.repos.d/rpmfusion*.repo
       register: check_enabled_options
       failed_when: >-

@@ -1,9 +1,9 @@
 ---
-# Install tasks
 
-- block:
+- name: Install rpmfusion
+  block:
     - name: Search rpmfusion installed packages
-      shell: >-
+      ansible.builtin.shell: >-
         rpm -q --queryformat "%{NAME}\n"
         {{ rpmfusion_package | regex_replace('.noarch.rpm', '') }}
       args:
@@ -13,10 +13,12 @@
       failed_when: no
       loop: "{{ rpmfusion_variants }}"
 
-    - block:
-        - block:
+    - name: Perform rpmfusion install/uninstall
+      block:
+        - name: Perform rpmfusion install
+          block:
             - name: Download rpmfusion repository packages
-              get_url:
+              ansible.builtin.get_url:
                 url: >-
                   {{ rpmfusion_url
                      + "/"
@@ -26,12 +28,13 @@
                      + "/"
                      + rpmfusion_package }}
                 dest: "{{ rpmfusion_download_tmp_dir }}"
+                mode: 0640
                 validate_certs: "{{ rpmfusion_validate_certs | bool }}"
               loop: "{{ rpmfusion_variants }}"
               environment: "{{ proxy_client_environment }}"
 
             - name: Install rpmfusion repository packages
-              package:
+              ansible.builtin.package:
                 name: "{{ rpmfusion_package_download_path }}"
                 state: present
                 disable_gpg_check: "{{ not rpmfusion_validate_certs | bool }}"
@@ -42,14 +45,14 @@
             or rpmfusion_state == "force"
 
         - name: Uninstall rpmfusion repository packages
-          package:
+          ansible.builtin.package:
             name: "{{ item | regex_replace('-27-1.noarch', '') }}"
             state: absent
           when: rpmfusion_state == "absent"
           loop: "{{ rpmfusion_installed_packages }}"
 
         - name: Delete rpmfusion repository downloaded packages
-          file:
+          ansible.builtin.file:
             path: "{{ rpmfusion_package_download_path }}"
             state: absent
           loop: "{{ rpmfusion_variants }}"
