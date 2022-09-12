@@ -4,7 +4,7 @@
   hosts: molecule_hosts
   tasks:
     - name: Check that all rpmfusion packages were removed
-      shell: >-
+      ansible.builtin.shell: >-
         set -o pipefail ;
         rpm -qa | grep rpmfusion
       args:
